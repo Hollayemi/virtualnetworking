@@ -1,24 +1,13 @@
 export const siteConfig = {
-  name: "ConnectFlow",
+  name: "virtualNet",
   tagline: "Structured Networking for Premium Events",
   logo: "/images/logo/logo.png",
   description:
-    "ConnectFlow is a premium networking infrastructure that transforms conferences, summits, and professional gatherings into structured, monetizable networking environments. Connect with VIP attendees, earn credits through meaningful engagement, and provide organizers with measurable networking outcomes.",
-  
-  // Core platform value propositions
-  valueProps: [
-    "Controlled access to VIP and high-value attendees",
-    "Credit-based networking economy with cashback rewards",
-    "Structured connection requests and meeting scheduling",
-    "Verified profiles and smart icebreakers",
-    "Post-event networking with paid extensions",
-  ],
+    "virtualNet is a premium networking infrastructure that transforms conferences, summits, and professional gatherings into structured, measurable networking environments. VIP access gates, a credit economy, verified profiles, and organizer analytics.",
 
-  // URLs
-  url: "https://connectflow.io",
-  dashboardUrl: "https://app.connectflow.io",
-  
-  // Company / Platform info
+  url: "https://virtualNet.io",
+  dashboardUrl: "https://app.virtualNet.io",
+
   platform: {
     founded: 2024,
     type: "B2B SaaS Event Networking Platform",
@@ -26,67 +15,48 @@ export const siteConfig = {
     integrationMethods: ["CSV Upload", "Webhook Integration", "Networking Access Links"],
   },
 
-  // Contact & Support
   contact: {
-    sales: "sales@connectflow.io",
-    support: "support@connectflow.io",
-    partners: "partners@connectflow.io",
-    security: "security@connectflow.io",
+    sales: "sales@virtualNet.io",
+    support: "support@virtualNet.io",
+    partners: "partners@virtualNet.io",
+    security: "security@virtualNet.io",
     phone: "+44 20 1234 5678",
     address: "London, United Kingdom",
     activeHours: "Monday - Friday, 9:00 - 18:00 GMT",
-    helpCenter: "/help",
-    status: "/status",
   },
 
-  // Navigation
+  // Primary nav — kept focused, maps to page anchors
   nav: [
-    { label: "Home", href: "/" },
-    { label: "For Organizers", href: "/organizers" },
-    { label: "For Attendees", href: "/attendees" },
-    { label: "For Sponsors", href: "/sponsors" },
-    { label: "Pricing", href: "/pricing" },
-    { label: "How It Works", href: "/how-it-works" },
-    { label: "Resources", href: "/resources" },
-    { label: "Contact", href: "/contact" },
+    { label: "Features", href: "#features" },
+    { label: "How It Works", href: "#how-it-works" },
+    { label: "For Organizers", href: "#organizers" },
+    { label: "Pricing", href: "#pricing" },
   ],
 
-  // Footer navigation (grouped)
   footerNav: {
     product: [
       { label: "Features", href: "/features" },
       { label: "Pricing", href: "/pricing" },
       { label: "Integrations", href: "/integrations" },
       { label: "Security", href: "/security" },
-      { label: "Roadmap", href: "/roadmap" },
       { label: "Changelog", href: "/changelog" },
     ],
     solutions: [
-      { label: "For Conference Organizers", href: "/solutions/conferences" },
-      { label: "For Summit Organizers", href: "/solutions/summits" },
-      { label: "For Professional Associations", href: "/solutions/associations" },
-      { label: "For Startup Communities", href: "/solutions/startups" },
-      { label: "For Sponsors & Exhibitors", href: "/solutions/sponsors" },
-    ],
-    resources: [
-      { label: "Help Center", href: "/help" },
-      { label: "Blog", href: "/blog" },
-      { label: "Case Studies", href: "/case-studies" },
-      { label: "Webinars", href: "/webinars" },
-      { label: "Documentation", href: "/docs" },
-      { label: "API Reference", href: "/api-docs" },
+      { label: "For Organizers", href: "/organizers" },
+      { label: "For Attendees", href: "/attendees" },
+      { label: "For Sponsors", href: "/sponsors" },
+      { label: "Conferences", href: "/solutions/conferences" },
+      { label: "Summits", href: "/solutions/summits" },
     ],
     company: [
-      { label: "About Us", href: "/about" },
+      { label: "About", href: "/about" },
+      { label: "Blog", href: "/blog" },
       { label: "Careers", href: "/careers" },
-      { label: "Press", href: "/press" },
-      { label: "Partners", href: "/partners" },
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Terms of Service", href: "/terms" },
     ],
   },
 
-  // Monetization
   monetization: {
     organizerPlans: ["Per Event", "Monthly Subscription", "Annual Subscription"],
     creditPacks: [
@@ -98,7 +68,12 @@ export const siteConfig = {
     vipPass: {
       name: "VIP Networking Pass",
       price: "$49",
-      benefits: ["Unlimited connection requests", "Priority messaging", "Premium visibility", "Verified badge"],
+      benefits: [
+        "Unlimited connection requests",
+        "Priority messaging",
+        "Premium visibility",
+        "Verified badge",
+      ],
     },
     postEventAccess: {
       price: "$19",
@@ -106,46 +81,37 @@ export const siteConfig = {
     },
   },
 
-  // Key metrics (from PRD)
-  metrics: {
-    networking: ["Connection requests", "Accepted connections", "Messages exchanged", "Meetings scheduled"],
-    event: ["Registrations", "Attendance engagement"],
-    revenue: ["Credit purchases", "VIP pass purchases", "Organizer subscriptions"],
-  },
-
-  // Core features (MVP + High-Leverage)
   features: {
     mvp: [
       "Event creation and management",
       "Attendee profiles with networking goals",
       "Attendee discovery with filters",
-      "Connection request flow (request → accept → message → schedule)",
+      "Connection request flow",
       "Connected messaging",
       "Meeting scheduling with calendar invites",
     ],
     highLeverage: [
-      "VIP Access Gate - Spend credits to connect with VIPs",
-      "Networking Credits Economy - Purchase or earn credits",
-      "VIP Cashback Rewards - VIPs earn credits for accepting requests",
-      "Verified Profiles - LinkedIn, email domain, or organizer verification",
-      "Networking Intention Tags - Hiring, Investment, Partnership, Mentorship, Sales",
-      "Networking Availability Slots - Set when you're available to meet",
+      "VIP Access Gate",
+      "Networking Credits Economy",
+      "VIP Cashback Rewards",
+      "Verified Profiles",
+      "Networking Intention Tags",
+      "Networking Availability Slots",
     ],
     engagement: [
-      "Networking Map - Visual attendee grouping by industry or role",
-      "Digital Business Cards - Shareable QR code cards",
-      "Event Leaderboard - Gamified rankings with credit rewards",
-      "Smart Icebreakers - Conversation prompts based on shared interests",
-      "Post-Event Networking - Paid extension after event ends",
+      "Networking Map",
+      "Digital Business Cards",
+      "Event Leaderboard",
+      "Smart Icebreakers",
+      "Post-Event Networking",
     ],
   },
 
-  // Integration options
   integrations: {
     methods: [
-      { type: "CSV Upload", description: "Upload attendee lists via CSV with name, email, company, role, ticket tier" },
+      { type: "CSV Upload", description: "Upload attendee lists with name, email, company, role, ticket tier" },
       { type: "Webhook Integration", description: "Automatic attendee data sync from registration platforms" },
-      { type: "Networking Access Links", description: "Distribute access links after registration" },
+      { type: "Networking Access Links", description: "Distribute access links post-registration" },
     ],
     platforms: [
       "Eventbrite",
@@ -157,40 +123,31 @@ export const siteConfig = {
     ],
   },
 
-  // User tiers
   userTiers: {
     attendee: ["Regular", "Premium", "VIP"],
     organizer: ["Starter", "Professional", "Enterprise"],
     sponsor: ["Bronze", "Silver", "Gold", "Platinum"],
   },
 
-  // Social links
   socials: {
-    linkedin: "https://linkedin.com/company/connectflow",
-    twitter: "https://twitter.com/connectflow",
-    facebook: "https://facebook.com/connectflow",
-    instagram: "https://instagram.com/connectflow",
-    youtube: "https://youtube.com/@connectflow",
-    github: "https://github.com/connectflow",
+    linkedin: "https://linkedin.com/company/virtualNet",
+    twitter: "https://twitter.com/virtualNet",
   },
 
-  // Legal
   legal: {
-    companyName: "ConnectFlow Ltd",
+    companyName: "virtualNet Ltd",
     registrationNumber: "12345678",
     vatNumber: "GB123456789",
     registeredAddress: "London, United Kingdom",
-    privacyEmail: "privacy@connectflow.io",
+    privacyEmail: "privacy@virtualNet.io",
     dpaAvailable: true,
     gdprCompliant: true,
   },
 
-  // SEO & Meta
   seo: {
     defaultOgImage: "/images/og-image.jpg",
     favicon: "/images/logo/logo.png",
-    appleTouchIcon: "/images/logo/logo.png",
-    themeColor: "#0a2540",
-    twitterHandle: "@connectflow",
+    themeColor: "#0D1B2A",
+    twitterHandle: "@virtualNet",
   },
 };
