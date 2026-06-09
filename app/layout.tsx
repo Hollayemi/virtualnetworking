@@ -18,29 +18,50 @@ const fraunces = Fraunces({
   display: "swap",
 });
 
-// export const metadata: Metadata = {
-//   title: {
-//     default: `${siteConfig.name} - ${siteConfig.tagline}`,
-//     template: `%s | ${siteConfig.name}`,
-//   },
-//   description: siteConfig.description,
-//   keywords: [
-//     "home care London",
-//     "supported living Haringey",
-//     "companionship care",
-//     "elderly care London",
-//     "person-centered care UK",
-//     "TimeWell Care Services",
-//   ],
-//   openGraph: {
-//     title: siteConfig.name,
-//     description: siteConfig.description,
-//     siteName: siteConfig.name,
-//     locale: "en_GB",
-//     type: "website",
-//   },
-//   robots: { index: true, follow: true },
-// };
+export const metadata: Metadata = {
+  title: {
+    default: `${siteConfig.name} - ${siteConfig.tagline}`,
+    template: `%s | ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  keywords: [
+    "event networking",
+    "conference networking platform",
+    "VIP access networking",
+    "professional networking",
+    "event attendee connection",
+    "networking credits",
+    "event organizer dashboard",
+    "structured networking",
+    "summit networking tool",
+  ],
+  openGraph: {
+    title: siteConfig.name,
+    description: siteConfig.description,
+    siteName: siteConfig.name,
+    locale: "en_GB",
+    type: "website",
+    images: [
+      {
+        url: "/images/logo/logo.png",
+        width: 1200,
+        height: 630,
+        alt: `${siteConfig.name} Logo`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: ["/images/logo/logo.png"],
+  },
+  icons: {
+    icon: "/images/logo/logo.png",
+    apple: "/images/logo/logo.png",
+  },
+  robots: { index: true, follow: true },
+};
 
 export default function RootLayout({
   children,
