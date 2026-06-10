@@ -19,6 +19,7 @@ export const SEARCH_CATEGORIES = [
 
 export const NAV_LINKS = [
   { label: "Features", href: "#features" },
+  { label: "Events", href: "/explore" },
   { label: "How It Works", href: "#how-it-works" },
   { label: "For Organizers", href: "#organizers" },
   { label: "Pricing", href: "#pricing" },
