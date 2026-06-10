@@ -1,25 +1,3 @@
-/**
- * AuthGuard.tsx
- *
- * Wraps your app (or a section of it) and:
- *  1. Listens for the "lawticha:auth_expired" event fired by axiosBaseQuery
- *  2. Shows a toast notification ("Session expired")
- *  3. Redirects the user to the correct login page
- *
- * Place this inside ProviderWrapper (or directly in app/layout.tsx) so it
- * wraps all pages that need protection.
- *
- * Usage:
- *   // app/layout.tsx
- *   <ProviderWrapper>
- *     <UserDataProvider>
- *       <AuthGuard>
- *         {children}
- *       </AuthGuard>
- *     </UserDataProvider>
- *   </ProviderWrapper>
- */
-
 "use client";
 
 import React, { useEffect, useRef } from "react";
@@ -64,7 +42,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
           }, 500);
         } else {
           setTimeout(() => {
-            router.push(`/auth?from=${encodeURIComponent(pathname)}#login`);
+            router.push(`/login?from=${encodeURIComponent(pathname)}`);
           }, 500);
         }
       } else if (reason === "forbidden") {

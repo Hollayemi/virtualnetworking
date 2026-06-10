@@ -61,7 +61,19 @@ const CONNECTIONS = [
   { _id: "c5", name: "Rachel O.", role: "Head of Events", company: "TechSummit EU", intentionTag: "Sales", status: "declined", avatar: "R", avatarBg: "#64748b", eventName: "Web Summit London 2025", connectedAt: "2025-06-03T12:00:00Z" },
 ];
 
-const MEETINGS = [
+type MeetingStatus = "upcoming" | "attended" | "missed";
+type Meeting = {
+  _id: string;
+  with: string;
+  company: string;
+  date: string;
+  duration: number;
+  eventName: string;
+  status: MeetingStatus;
+  location: string;
+};
+
+const MEETINGS: Meeting[] = [
   { _id: "m1", with: "James K.", company: "Sequoia Capital", date: "2025-07-15T10:00:00Z", duration: 30, eventName: "Web Summit London 2025", status: "upcoming", location: "Meeting Room 3B, ExCeL" },
   { _id: "m2", with: "Priya S.", company: "Meta", date: "2025-07-11T14:30:00Z", duration: 20, eventName: "AI Builders Summit", status: "upcoming", location: "Virtual (Zoom)" },
   { _id: "m3", with: "Carlos B.", company: "OpenLedger", date: "2025-06-05T09:00:00Z", duration: 45, eventName: "FinTech Connect 2025", status: "attended", location: "Main Hall, Manchester Central" },
@@ -341,12 +353,11 @@ function MeetingsTab() {
         })}
       </div>
 
-      {/* List */}
       <div className="bg-white border border-navy-100 rounded-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-navy-50">
           <h3 className="font-semibold text-navy-800 text-[15px]">Meeting history</h3>
         </div>
-        {MEETINGS.map(m => {
+        {MEETINGS.map((m: Meeting) => {
           const colors = statusColors[m.status];
           return (
             <div key={m._id} className="flex items-center gap-4 px-6 py-4 border-b border-navy-50 last:border-0">

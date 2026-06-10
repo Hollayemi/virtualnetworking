@@ -5,7 +5,6 @@ import { siteConfig } from "@/config/site";
 import ProviderWrapper from "@/redux/provider";
 import { Toaster } from "./components/ui/sonner";
 import { UserDataProvider } from "@/context/userContext";
-import AuthGuard from "./components/wrapper/AuthGuard";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -80,7 +79,6 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col antialiased">
         <ProviderWrapper>
           <UserDataProvider>
-            <AuthGuard>
               <Toaster
                 toastOptions={
                   {
@@ -107,7 +105,6 @@ export default function RootLayout({
                 }
               />
               {children}
-            </AuthGuard>
           </UserDataProvider>
         </ProviderWrapper>
       </body>

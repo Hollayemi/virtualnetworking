@@ -177,19 +177,19 @@ export default function LoginPage() {
         </form>
 
         {/* Divider */}
-        <div className="flex items-center gap-3 my-6">
+        {/* <div className="flex items-center gap-3 my-6">
           <span className="flex-1 h-px bg-[#e8edf3]" />
           <span className="text-xs text-slate-400">or</span>
           <span className="flex-1 h-px bg-[#e8edf3]" />
-        </div>
+        </div> */}
 
         {/* Organiser CTA */}
-        <Link
+        {/* <Link
           href="/organiser/login"
           className="w-full flex items-center justify-center gap-2 py-3 border border-[#e8edf3] rounded-xl text-sm font-medium text-slate-600 no-underline hover:border-[#38AADD] hover:text-[#0D1B2A] transition-colors"
         >
           Sign in as an organiser
-        </Link>
+        </Link> */}
 
         {/* Register link */}
         <p className="text-center text-sm text-slate-500 mt-6">
