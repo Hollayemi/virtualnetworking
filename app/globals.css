@@ -278,3 +278,11 @@ html {
     transform: translateY(0);
   }
 }
+
+#features{
+  background-image: url('/images/connbg.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
