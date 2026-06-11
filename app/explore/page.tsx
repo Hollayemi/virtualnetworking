@@ -334,7 +334,7 @@ function EventCard({ event, saved, onSave, view }: {
         <div className={`bg-white border border-navy-100 rounded-2xl overflow-hidden transition-all duration-200 hover:shadow-[0_12px_40px_rgba(13,27,42,0.12)] hover:-translate-y-1 flex flex-col ${event.status === "soldout" ? "opacity-75" : ""}`}>
             {/* Banner */}
             <div className="relative h-[140px] flex items-center justify-center overflow-hidden" style={{ background: event.bannerColor }}>
-                <div className="text-6xl">{event.bannerEmoji}</div>
+                <img src={event.bannerEmoji} alt="" className="w-full object-cover" />
                 {/* Decorative gradient */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent" />
                 {/* Top badges */}

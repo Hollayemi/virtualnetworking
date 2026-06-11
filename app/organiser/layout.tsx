@@ -110,7 +110,7 @@ function Sidebar({ mobile, onClose }: { mobile?: boolean; onClose?: () => void }
       </div>
 
       {/* ── Live event pill ── */}
-      {hasLiveEvent && (
+      {/* {hasLiveEvent && (
         <div
           className={`
             mx-3 mt-3 mb-1 flex items-center gap-2.5 rounded-xl px-3 py-2.5
@@ -129,7 +129,7 @@ function Sidebar({ mobile, onClose }: { mobile?: boolean; onClose?: () => void }
             </div>
           )}
         </div>
-      )}
+      )} */}
 
       {/* ── Nav groups ── */}
       <nav className="flex-1 overflow-y-auto py-3 px-2 scrollbar-hide">
@@ -184,22 +184,10 @@ function Sidebar({ mobile, onClose }: { mobile?: boolean; onClose?: () => void }
         ))}
       </nav>
 
-      {/* ── Create Event CTA ── */}
-      {(!collapsed || mobile) && (
-        <div className="px-3 pb-3">
-          <Link
-            href="/organiser/events/new"
-            className="flex items-center justify-center gap-2 w-full py-2.5 bg-[#E8472F] hover:bg-[#c73a24] text-white text-[13px] font-semibold rounded-xl transition-colors no-underline"
-          >
-            <Plus size={14} />
-            New Event
-          </Link>
-        </div>
-      )}
       {collapsed && !mobile && (
         <div className="flex justify-center pb-3">
           <Link
-            href="/organiser/events/new"
+            href="/organiser/events/create"
             title="New Event"
             className="w-10 h-10 bg-[#E8472F] hover:bg-[#c73a24] text-white rounded-xl flex items-center justify-center transition-colors no-underline"
           >
@@ -343,7 +331,7 @@ function TopBar({ onMobileMenuOpen }: { onMobileMenuOpen: () => void }) {
 
         {/* Quick create */}
         <Link
-          href="/organiser/events/new"
+          href="/organiser/events/create"
           className="hidden sm:flex items-center gap-2 h-9 px-4 bg-[#E8472F] hover:bg-[#c73a24] text-white text-[13px] font-semibold rounded-xl transition-colors no-underline"
         >
           <Plus size={14} />
