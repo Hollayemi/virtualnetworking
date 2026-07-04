@@ -49,55 +49,34 @@ export default function LoginPage() {
   const [mode, setMode] = useState<'login' | 'signup'>('login')
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
-      background: 'var(--bg-base)',
-    }} className="login-grid">
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-[#000000]">
       {/* Left: Marketing panel */}
-      <div style={{
-        position: 'relative',
-        overflow: 'hidden',
-        background: 'linear-gradient(135deg, #0D1530 0%, #0A1020 100%)',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        padding: 'clamp(40px, 5vw, 64px)',
-      }} className="login-left">
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#0D1530] to-[#0A1020] flex flex-col justify-between p-[clamp(40px,5vw,64px)] hidden lg:flex">
         {/* Orbs */}
-        <div className="orb orb-primary" style={{ width: 400, height: 400, top: '-10%', left: '-10%', opacity: 0.3 }} />
-        <div className="orb orb-secondary" style={{ width: 300, height: 300, bottom: '10%', right: '-5%', opacity: 0.2 }} />
-        <div className="orb orb-accent" style={{ width: 200, height: 200, top: '50%', left: '40%', opacity: 0.15 }} />
+        <div className="absolute w-[400px] h-[400px] top-[-10%] left-[-10%] opacity-30 bg-primary-500 rounded-full blur-3xl" />
+        <div className="absolute w-[300px] h-[300px] bottom-[10%] right-[-5%] opacity-20 bg-accent-500 rounded-full blur-3xl" />
+        <div className="absolute w-[200px] h-[200px] top-[50%] left-[40%] opacity-15 bg-primary-400 rounded-full blur-3xl" />
 
         {/* Grid */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: `linear-gradient(rgba(79,110,247,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(79,110,247,0.05) 1px, transparent 1px)`,
-          backgroundSize: '40px 40px',
-          maskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%)',
-        }} />
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `linear-gradient(rgba(79,110,247,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(79,110,247,0.05) 1px, transparent 1px)`,
+            backgroundSize: '40px 40px',
+            maskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%)',
+          }}
+        />
 
-        <div style={{ position: 'relative', zIndex: 1 }}>
+        <div className="relative z-10">
           {/* Logo */}
-          <Link href="/" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 10 }}>
-            <div style={{
-              width: 36,
-              height: 36,
-              borderRadius: 10,
-              background: 'var(--gradient-brand)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 0 24px rgba(79,110,247,0.4)',
-            }}>
+          <Link href="/" className="inline-flex items-center gap-2.5 no-underline">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-[0_0_24px_rgba(79,110,247,0.4)]">
               <svg width="20" height="20" viewBox="0 0 18 18" fill="none">
                 <path d="M9 2L15.5 6V12L9 16L2.5 12V6L9 2Z" stroke="white" strokeWidth="1.5" fill="none"/>
                 <circle cx="9" cy="9" r="2.5" fill="white"/>
               </svg>
             </div>
-            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 20, color: '#fff' }}>Nexus</span>
+            <span className="font-bold text-xl text-white">Nexus</span>
           </Link>
         </div>
 
@@ -106,24 +85,12 @@ export default function LoginPage() {
           initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          style={{ position: 'relative', zIndex: 1 }}
+          className="relative z-10"
         >
           {/* Network viz */}
-          <div style={{
-            width: '100%',
-            aspectRatio: '4/3',
-            borderRadius: 20,
-            background: 'rgba(255,255,255,0.03)',
-            border: '1px solid var(--border-default)',
-            marginBottom: 36,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'relative',
-            overflow: 'hidden',
-          }}>
+          <div className="w-full aspect-[4/3] rounded-2xl bg-white/5 border border-primary-200/20 mb-9 flex items-center justify-center relative overflow-hidden">
             {/* Network nodes visualization */}
-            <svg width="100%" height="100%" viewBox="0 0 400 300" style={{ position: 'absolute', inset: 0 }}>
+            <svg width="100%" height="100%" viewBox="0 0 400 300" className="absolute inset-0">
               {/* Connection lines */}
               {[
                 [200, 150, 100, 80],
@@ -175,103 +142,54 @@ export default function LoginPage() {
             </svg>
 
             {/* AI label */}
-            <div style={{
-              position: 'absolute',
-              bottom: 16,
-              left: '50%',
-              transform: 'translateX(-50%)',
-              padding: '6px 16px',
-              borderRadius: 99,
-              background: 'rgba(79,110,247,0.15)',
-              border: '1px solid rgba(79,110,247,0.25)',
-              fontSize: 12,
-              color: 'var(--color-primary-light)',
-              fontWeight: 600,
-              whiteSpace: 'nowrap',
-            }}>
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-primary-500/15 border border-primary-500/25 text-xs text-primary-300 font-semibold whitespace-nowrap">
               ✨ AI Match Score Active
             </div>
           </div>
 
           {/* Testimonial */}
-          <div style={{
-            padding: '20px 24px',
-            borderRadius: 16,
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid var(--border-subtle)',
-            marginBottom: 28,
-          }}>
-            <p style={{ fontSize: 14, color: 'var(--text-secondary)', fontStyle: 'italic', lineHeight: 1.65, marginBottom: 14 }}>
+          <div className="p-5 rounded-2xl bg-white/5 border border-primary-200/10 mb-7">
+            <p className="text-sm text-gray-300 italic leading-relaxed mb-3.5">
               "I had 6 investor meetings scheduled before I even landed at the conference. Nexus is how serious networkers prepare."
             </p>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{
-                width: 32,
-                height: 32,
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #4F6EF7, #7C3AED)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 12,
-                fontWeight: 700,
-                color: '#fff',
-              }}>
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-xs font-bold text-white">
                 AK
               </div>
               <div>
-                <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>Alex Kim</p>
-                <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>Founder, DataLayer</p>
+                <p className="text-sm font-semibold text-white">Alex Kim</p>
+                <p className="text-xs text-gray-400">Founder, DataLayer</p>
               </div>
             </div>
           </div>
         </motion.div>
 
         {/* Stats */}
-        <div style={{ display: 'flex', gap: 32, position: 'relative', zIndex: 1 }}>
+        <div className="flex gap-8 relative z-10">
           {stats.map(s => (
             <div key={s.label}>
-              <p style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 24,
-                fontWeight: 800,
-                letterSpacing: '-0.03em',
-                background: 'var(--gradient-text)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}>{s.value}</p>
-              <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>{s.label}</p>
+              <p className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">
+                {s.value}
+              </p>
+              <p className="text-xs text-gray-400">{s.label}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* Right: Auth form */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 'clamp(40px, 5vw, 64px)',
-        background: 'var(--bg-base)',
-      }}>
+      <div className="flex items-center justify-center p-[clamp(40px,5vw,64px)] bg-[#000000]">
         <motion.div
           initial={{ opacity: 0, x: 32 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          style={{ width: '100%', maxWidth: 420 }}
+          className="w-full max-w-[420px]"
         >
-          <div style={{ marginBottom: 36 }}>
-            <h1 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(26px, 3vw, 34px)',
-              fontWeight: 800,
-              letterSpacing: '-0.03em',
-              marginBottom: 8,
-            }}>
+          <div className="mb-9">
+            <h1 className="text-[clamp(26px,3vw,34px)] font-extrabold tracking-tight text-white mb-2">
               {mode === 'login' ? 'Welcome back' : 'Create your account'}
             </h1>
-            <p style={{ fontSize: 15, color: 'var(--text-muted)' }}>
+            <p className="text-[15px] text-gray-400">
               {mode === 'login'
                 ? 'Sign in to your Nexus account'
                 : 'Start networking smarter today — it\'s free'}
@@ -279,17 +197,11 @@ export default function LoginPage() {
           </div>
 
           {/* Social login */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
+          <div className="flex flex-col gap-2.5 mb-6">
             {socialProviders.map(p => (
               <button
                 key={p.name}
-                className="btn-secondary"
-                style={{
-                  width: '100%',
-                  justifyContent: 'center',
-                  padding: '12px 20px',
-                  gap: 12,
-                }}
+                className="w-full px-5 py-3 rounded-xl border border-primary-200/20 bg-white/5 text-white hover:bg-white/10 transition-all flex items-center justify-center gap-3 text-sm font-medium"
               >
                 {p.icon}
                 Continue with {p.name}
@@ -298,16 +210,16 @@ export default function LoginPage() {
           </div>
 
           {/* Divider */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
-            <div className="divider-glow" style={{ flex: 1 }} />
-            <span style={{ fontSize: 12, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>or with email</span>
-            <div className="divider-glow" style={{ flex: 1 }} />
+          <div className="flex items-center gap-4 mb-6">
+            <div className="flex-1 h-px bg-primary-200/20" />
+            <span className="text-xs text-gray-400 whitespace-nowrap">or with email</span>
+            <div className="flex-1 h-px bg-primary-200/20" />
           </div>
 
           {/* Email form */}
-          <form style={{ display: 'flex', flexDirection: 'column', gap: 14 }} onSubmit={e => e.preventDefault()}>
+          <form className="flex flex-col gap-3.5" onSubmit={e => e.preventDefault()}>
             <div>
-              <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: 8 }}>
+              <label className="text-sm font-semibold text-gray-300 block mb-2">
                 Email address
               </label>
               <input
@@ -315,27 +227,14 @@ export default function LoginPage() {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="you@company.com"
-                style={{
-                  width: '100%',
-                  padding: '12px 16px',
-                  borderRadius: 12,
-                  border: '1px solid var(--border-default)',
-                  background: 'rgba(255,255,255,0.04)',
-                  color: 'var(--text-primary)',
-                  fontSize: 15,
-                  outline: 'none',
-                  transition: 'all 0.2s ease',
-                  fontFamily: 'var(--font-body)',
-                }}
-                onFocus={e => (e.target.style.borderColor = 'var(--color-primary)')}
-                onBlur={e => (e.target.style.borderColor = 'var(--border-default)')}
+                className="w-full px-4 py-3 rounded-xl border border-primary-200/20 bg-white/5 text-white text-[15px] outline-none transition-all focus:border-primary-400"
               />
             </div>
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>Password</label>
+              <div className="flex justify-between mb-2">
+                <label className="text-sm font-semibold text-gray-300">Password</label>
                 {mode === 'login' && (
-                  <a href="#" style={{ fontSize: 13, color: 'var(--color-primary-light)', textDecoration: 'none' }}>Forgot?</a>
+                  <a href="#" className="text-sm text-primary-300 no-underline hover:text-primary-200">Forgot?</a>
                 )}
               </div>
               <input
@@ -343,61 +242,33 @@ export default function LoginPage() {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
-                style={{
-                  width: '100%',
-                  padding: '12px 16px',
-                  borderRadius: 12,
-                  border: '1px solid var(--border-default)',
-                  background: 'rgba(255,255,255,0.04)',
-                  color: 'var(--text-primary)',
-                  fontSize: 15,
-                  outline: 'none',
-                  transition: 'all 0.2s ease',
-                  fontFamily: 'var(--font-body)',
-                }}
-                onFocus={e => (e.target.style.borderColor = 'var(--color-primary)')}
-                onBlur={e => (e.target.style.borderColor = 'var(--border-default)')}
+                className="w-full px-4 py-3 rounded-xl border border-primary-200/20 bg-white/5 text-white text-[15px] outline-none transition-all focus:border-primary-400"
               />
             </div>
 
-            <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '13px', fontSize: 15, marginTop: 4 }}>
+            <button type="submit" className="w-full py-3.5 rounded-xl bg-primary-500 text-white font-medium text-[15px] hover:bg-primary-600 transition-all mt-1">
               {mode === 'login' ? 'Sign in to Nexus' : 'Create account'}
             </button>
           </form>
 
-          <p style={{ textAlign: 'center', marginTop: 24, fontSize: 14, color: 'var(--text-muted)' }}>
+          <p className="text-center mt-6 text-sm text-gray-400">
             {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
             <button
               onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'var(--color-primary-light)',
-                cursor: 'pointer',
-                fontSize: 14,
-                fontWeight: 600,
-                fontFamily: 'var(--font-body)',
-              }}
+              className="bg-none border-none text-primary-300 cursor-pointer text-sm font-semibold hover:text-primary-200"
             >
               {mode === 'login' ? 'Create one free' : 'Sign in'}
             </button>
           </p>
 
-          <p style={{ textAlign: 'center', marginTop: 20, fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.6 }}>
+          <p className="text-center mt-5 text-xs text-gray-400 leading-relaxed">
             By continuing you agree to our{' '}
-            <a href="/terms" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Terms</a>
+            <a href="/terms" className="text-gray-300 no-underline hover:text-white">Terms</a>
             {' '}and{' '}
-            <a href="/privacy" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Privacy Policy</a>
+            <a href="/privacy" className="text-gray-300 no-underline hover:text-white">Privacy Policy</a>
           </p>
         </motion.div>
       </div>
-
-      <style>{`
-        @media (max-width: 900px) {
-          .login-grid { grid-template-columns: 1fr !important; }
-          .login-left { display: none !important; }
-        }
-      `}</style>
     </div>
   )
 }
