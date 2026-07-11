@@ -1,274 +1,253 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import Link from 'next/link'
+import { useState } from 'react';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
+import { Space_Grotesk, Inter, IBM_Plex_Mono } from 'next/font/google';
+import { Mail, Lock, Eye, EyeOff, ArrowRight, Loader2, ShieldCheck, Sparkles } from 'lucide-react';
+import {  FaChrome, FaLinkedin } from 'react-icons/fa';
+import { IMAGES } from '@/lib/images';
 
-const socialProviders = [
-  {
-    name: 'Google',
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-        <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
-        <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/>
-        <path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
-        <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
-      </svg>
-    ),
-  },
-  {
-    name: 'LinkedIn',
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="#0A66C2">
-        <path d="M16.2 0H1.8A1.8 1.8 0 000 1.8v14.4A1.8 1.8 0 001.8 18h14.4A1.8 1.8 0 0018 16.2V1.8A1.8 1.8 0 0016.2 0zM5.4 15.3H2.7V6.75h2.7V15.3zM4.05 5.58a1.575 1.575 0 110-3.15 1.575 1.575 0 010 3.15zM15.3 15.3h-2.7v-4.725c0-1.125-.45-1.575-1.125-1.575-.9 0-1.35.675-1.35 1.575V15.3H7.425V6.75h2.7v1.125c.45-.675 1.35-1.35 2.7-1.35 1.8 0 2.925 1.125 2.925 3.375V15.3z"/>
-      </svg>
-    ),
-  },
-  {
-    name: 'Microsoft',
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-        <rect x="0" y="0" width="8.5" height="8.5" fill="#F25022"/>
-        <rect x="9.5" y="0" width="8.5" height="8.5" fill="#7FBA00"/>
-        <rect x="0" y="9.5" width="8.5" height="8.5" fill="#00A4EF"/>
-        <rect x="9.5" y="9.5" width="8.5" height="8.5" fill="#FFB900"/>
-      </svg>
-    ),
-  },
-]
+const display = Space_Grotesk({ subsets: ['latin'], weight: ['500', '600', '700'], variable: '--font-display' });
+const body = Inter({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--font-body' });
+const mono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-mono' });
 
-const stats = [
-  { value: '25K+', label: 'Professionals' },
-  { value: '50K+', label: 'Meetings created' },
-  { value: '92%', label: 'Match success' },
-]
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const inputClass =
+  'w-full rounded-xl border border-white/[0.08] bg-[#0D1712] px-4 py-3 text-[14px] text-[#EAF2ED] placeholder:text-[#5F736A] outline-none transition-colors focus:border-[#639781]/50';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [mode, setMode] = useState<'login' | 'signup'>('login')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [remember, setRemember] = useState(true);
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const next: { email?: string; password?: string } = {};
+    if (!email.trim()) next.email = 'Enter your email address.';
+    else if (!EMAIL_RE.test(email)) next.email = 'That email address doesn\u2019t look right.';
+    if (!password) next.password = 'Enter your password.';
+    setErrors(next);
+    if (Object.keys(next).length) return;
+
+    setSubmitting(true);
+    // TODO: replace with your real auth call, e.g. await api.login({ email, password, remember })
+    await new Promise((r) => setTimeout(r, 900));
+    setSubmitting(false);
+  };
 
   return (
-    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-[#000000]">
-      {/* Left: Marketing panel */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[#0D1530] to-[#0A1020] flex flex-col justify-between p-[clamp(40px,5vw,64px)] hidden lg:flex">
-        {/* Orbs */}
-        <div className="absolute w-[400px] h-[400px] top-[-10%] left-[-10%] opacity-30 bg-primary-500 rounded-full blur-3xl" />
-        <div className="absolute w-[300px] h-[300px] bottom-[10%] right-[-5%] opacity-20 bg-accent-500 rounded-full blur-3xl" />
-        <div className="absolute w-[200px] h-[200px] top-[50%] left-[40%] opacity-15 bg-primary-400 rounded-full blur-3xl" />
+    <main
+      className={`${display.variable} ${body.variable} ${mono.variable} min-h-screen bg-[#0A100D] text-[#EAF2ED] lg:grid lg:grid-cols-2`}
+      style={{ fontFamily: 'var(--font-body)' }}
+    >
+      {/* Left — image panel */}
+      <div className="relative hidden overflow-hidden lg:block">
+        <Image src={IMAGES.talkingGroup} alt="People networking at an event" fill priority className="object-cover" />
+        <div className="absolute inset-0 bg-[#0A100D]/60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A100D] via-[#0A100D]/40 to-[#0A100D]/70" />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#0A100D]" />
 
-        {/* Grid */}
-        <div 
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `linear-gradient(rgba(79,110,247,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(79,110,247,0.05) 1px, transparent 1px)`,
-            backgroundSize: '40px 40px',
-            maskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%)',
-          }}
-        />
+        <div className="relative z-10 flex h-full flex-col justify-between p-12">
+          <a href="/" className="flex items-center gap-2.5">
+            <span
+              className="grid h-8 w-8 place-items-center rounded-lg bg-[#639781] text-[13px] font-bold text-[#0A100D]"
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              M
+            </span>
+            <span className="text-[15px] font-semibold tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+              VirtualNet
+            </span>
+          </a>
 
-        <div className="relative z-10">
-          {/* Logo */}
-          <Link href="/" className="inline-flex items-center gap-2.5 no-underline">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-[0_0_24px_rgba(79,110,247,0.4)]">
-              <svg width="20" height="20" viewBox="0 0 18 18" fill="none">
-                <path d="M9 2L15.5 6V12L9 16L2.5 12V6L9 2Z" stroke="white" strokeWidth="1.5" fill="none"/>
-                <circle cx="9" cy="9" r="2.5" fill="white"/>
-              </svg>
-            </div>
-            <span className="font-bold text-xl text-white">Nexus</span>
-          </Link>
-        </div>
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              className="mb-6 flex flex-wrap gap-2"
+            >
+              <span className="flex items-center gap-1.5 rounded-full border border-white/[0.12] bg-[#0A100D]/60 px-3 py-1.5 text-[11.5px] font-medium backdrop-blur">
+                <ShieldCheck className="h-3.5 w-3.5 text-[#8FB8A4]" />
+                VIP access, protected
+              </span>
+              <span className="flex items-center gap-1.5 rounded-full border border-[#D9B26B]/25 bg-[#0A100D]/60 px-3 py-1.5 text-[11.5px] font-medium backdrop-blur">
+                <Sparkles className="h-3.5 w-3.5 text-[#D9B26B]" />
+                3 credits → 1 cashback
+              </span>
+            </motion.div>
 
-        {/* Center content */}
-        <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative z-10"
-        >
-          {/* Network viz */}
-          <div className="w-full aspect-[4/3] rounded-2xl bg-white/5 border border-primary-200/20 mb-9 flex items-center justify-center relative overflow-hidden">
-            {/* Network nodes visualization */}
-            <svg width="100%" height="100%" viewBox="0 0 400 300" className="absolute inset-0">
-              {/* Connection lines */}
-              {[
-                [200, 150, 100, 80],
-                [200, 150, 300, 80],
-                [200, 150, 320, 200],
-                [200, 150, 80, 220],
-                [200, 150, 140, 260],
-                [100, 80, 300, 80],
-                [300, 80, 320, 200],
-              ].map(([x1, y1, x2, y2], i) => (
-                <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
-                  stroke="rgba(79,110,247,0.2)" strokeWidth="1"
-                  strokeDasharray="4 4"
-                />
-              ))}
-
-              {/* Center node (you) */}
-              <circle cx="200" cy="150" r="28" fill="url(#grad1)" />
-              <circle cx="200" cy="150" r="32" fill="none" stroke="rgba(79,110,247,0.4)" strokeWidth="1.5"/>
-              <text x="200" y="154" textAnchor="middle" fill="white" fontSize="11" fontWeight="700">YOU</text>
-
-              {/* Surrounding nodes */}
-              {[
-                { cx: 100, cy: 80, label: 'Investor', color: '#7C3AED', r: 22 },
-                { cx: 300, cy: 80, label: 'Founder', color: '#4F6EF7', r: 22 },
-                { cx: 320, cy: 200, label: 'Partner', color: '#06B6D4', r: 20 },
-                { cx: 80, cy: 220, label: 'CTO', color: '#A855F7', r: 20 },
-                { cx: 140, cy: 260, label: 'VC', color: '#4F6EF7', r: 18 },
-              ].map((node, i) => (
-                <g key={i}>
-                  <circle cx={node.cx} cy={node.cy} r={node.r} fill={`${node.color}30`} stroke={node.color} strokeWidth="1.5"/>
-                  <text x={node.cx} y={node.cy + 4} textAnchor="middle" fill="white" fontSize="9" fontWeight="600">
-                    {node.label}
-                  </text>
-                  {/* Match score badge */}
-                  <circle cx={node.cx + node.r - 4} cy={node.cy - node.r + 4} r="9" fill={node.color}/>
-                  <text x={node.cx + node.r - 4} y={node.cy - node.r + 8} textAnchor="middle" fill="white" fontSize="7" fontWeight="700">
-                    {85 + i * 2}%
-                  </text>
-                </g>
-              ))}
-
-              <defs>
-                <radialGradient id="grad1">
-                  <stop offset="0%" stopColor="#4F6EF7"/>
-                  <stop offset="100%" stopColor="#7C3AED"/>
-                </radialGradient>
-              </defs>
-            </svg>
-
-            {/* AI label */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-primary-500/15 border border-primary-500/25 text-xs text-primary-300 font-semibold whitespace-nowrap">
-              ✨ AI Match Score Active
-            </div>
+            <motion.blockquote
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+              className="max-w-md text-[1.5rem] font-medium leading-snug tracking-tight"
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              "Our sponsors finally got leads they could act on instead of a stack of scanned badges."
+            </motion.blockquote>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.25 }}
+              className="mt-4 text-[13px] text-[#92A79C]"
+            >
+              Dana K. — Event Organiser, Summit Collective
+            </motion.p>
           </div>
-
-          {/* Testimonial */}
-          <div className="p-5 rounded-2xl bg-white/5 border border-primary-200/10 mb-7">
-            <p className="text-sm text-gray-300 italic leading-relaxed mb-3.5">
-              "I had 6 investor meetings scheduled before I even landed at the conference. Nexus is how serious networkers prepare."
-            </p>
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-xs font-bold text-white">
-                AK
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-white">Alex Kim</p>
-                <p className="text-xs text-gray-400">Founder, DataLayer</p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Stats */}
-        <div className="flex gap-8 relative z-10">
-          {stats.map(s => (
-            <div key={s.label}>
-              <p className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">
-                {s.value}
-              </p>
-              <p className="text-xs text-gray-400">{s.label}</p>
-            </div>
-          ))}
         </div>
       </div>
 
-      {/* Right: Auth form */}
-      <div className="flex items-center justify-center p-[clamp(40px,5vw,64px)] bg-[#000000]">
+      {/* Right — form */}
+      <div className="relative flex items-center justify-center overflow-hidden px-6 py-16">
+        <div className="pointer-events-none absolute inset-0 lg:hidden">
+          <div className="absolute -top-32 right-[-10%] h-[420px] w-[420px] rounded-full bg-[#639781]/[0.12] blur-[120px]" />
+        </div>
+
         <motion.div
-          initial={{ opacity: 0, x: 32 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full max-w-[420px]"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="relative z-10 w-full max-w-sm"
         >
-          <div className="mb-9">
-            <h1 className="text-[clamp(26px,3vw,34px)] font-extrabold tracking-tight text-white mb-2">
-              {mode === 'login' ? 'Welcome back' : 'Create your account'}
-            </h1>
-            <p className="text-[15px] text-gray-400">
-              {mode === 'login'
-                ? 'Sign in to your Nexus account'
-                : 'Start networking smarter today — it\'s free'}
-            </p>
-          </div>
+          <a href="/" className="mb-10 flex items-center gap-2.5 lg:hidden">
+            <span
+              className="grid h-8 w-8 place-items-center rounded-lg bg-[#639781] text-[13px] font-bold text-[#0A100D]"
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              M
+            </span>
+            <span className="text-[15px] font-semibold tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+              VirtualNet
+            </span>
+          </a>
 
-          {/* Social login */}
-          <div className="flex flex-col gap-2.5 mb-6">
-            {socialProviders.map(p => (
-              <button
-                key={p.name}
-                className="w-full px-5 py-3 rounded-xl border border-primary-200/20 bg-white/5 text-white hover:bg-white/10 transition-all flex items-center justify-center gap-3 text-sm font-medium"
-              >
-                {p.icon}
-                Continue with {p.name}
-              </button>
-            ))}
-          </div>
+          <h1 className="text-[1.7rem] font-semibold tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+            Welcome back
+          </h1>
+          <p className="mt-2 text-[14px] text-[#92A79C]">Sign in to keep your connections and meetings moving.</p>
 
-          {/* Divider */}
-          <div className="flex items-center gap-4 mb-6">
-            <div className="flex-1 h-px bg-primary-200/20" />
-            <span className="text-xs text-gray-400 whitespace-nowrap">or with email</span>
-            <div className="flex-1 h-px bg-primary-200/20" />
-          </div>
-
-          {/* Email form */}
-          <form className="flex flex-col gap-3.5" onSubmit={e => e.preventDefault()}>
+          <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4">
             <div>
-              <label className="text-sm font-semibold text-gray-300 block mb-2">
-                Email address
+              <label htmlFor="email" className="mb-2 block text-[13px] font-medium text-[#C7D6CE]">
+                Email
               </label>
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="you@company.com"
-                className="w-full px-4 py-3 rounded-xl border border-primary-200/20 bg-white/5 text-white text-[15px] outline-none transition-all focus:border-primary-400"
-              />
-            </div>
-            <div>
-              <div className="flex justify-between mb-2">
-                <label className="text-sm font-semibold text-gray-300">Password</label>
-                {mode === 'login' && (
-                  <a href="#" className="text-sm text-primary-300 no-underline hover:text-primary-200">Forgot?</a>
-                )}
+              <div className="relative">
+                <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#5F736A]" />
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@company.com"
+                  className={`${inputClass} pl-11 ${errors.email ? 'border-[#D9756B]/50' : ''}`}
+                />
               </div>
-              <input
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full px-4 py-3 rounded-xl border border-primary-200/20 bg-white/5 text-white text-[15px] outline-none transition-all focus:border-primary-400"
-              />
+              {errors.email && <p className="mt-1.5 text-[12px] text-[#E0A093]">{errors.email}</p>}
             </div>
 
-            <button type="submit" className="w-full py-3.5 rounded-xl bg-primary-500 text-white font-medium text-[15px] hover:bg-primary-600 transition-all mt-1">
-              {mode === 'login' ? 'Sign in to Nexus' : 'Create account'}
-            </button>
+            <div>
+              <div className="mb-2 flex items-center justify-between">
+                <label htmlFor="password" className="text-[13px] font-medium text-[#C7D6CE]">
+                  Password
+                </label>
+                <a href="/forgot-password" className="text-[12.5px] font-medium text-[#8FB8A4] hover:underline">
+                  Forgot password?
+                </a>
+              </div>
+              <div className="relative">
+                <Lock className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#5F736A]" />
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  className={`${inputClass} pl-11 pr-11 ${errors.password ? 'border-[#D9756B]/50' : ''}`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#5F736A] hover:text-[#8FB8A4]"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+              {errors.password && <p className="mt-1.5 text-[12px] text-[#E0A093]">{errors.password}</p>}
+            </div>
+
+            <label className="mt-1 flex items-center gap-2.5 text-[13px] text-[#92A79C]">
+              <button
+                type="button"
+                onClick={() => setRemember((v) => !v)}
+                className={`grid h-[18px] w-[18px] place-items-center rounded-md border transition-colors ${
+                  remember ? 'border-[#639781] bg-[#639781]' : 'border-white/20 bg-transparent'
+                }`}
+                aria-pressed={remember}
+              >
+                {remember && (
+                  <svg viewBox="0 0 12 10" className="h-2.5 w-2.5 fill-none stroke-[#0A100D]" strokeWidth={2}>
+                    <path d="M1 5l3.5 3.5L11 1" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </button>
+              Remember me for 30 days
+            </label>
+
+            <motion.button
+              type="submit"
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              disabled={submitting}
+              className="mt-2 flex items-center justify-center gap-2 rounded-full bg-[#639781] py-3.5 text-[14px] font-semibold text-[#0A100D] shadow-[0_0_24px_rgba(99,151,129,0.3)] disabled:opacity-70"
+            >
+              {submitting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <>
+                  Sign in
+                  <ArrowRight className="h-4 w-4" />
+                </>
+              )}
+            </motion.button>
           </form>
 
-          <p className="text-center mt-6 text-sm text-gray-400">
-            {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
-            <button
-              onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
-              className="bg-none border-none text-primary-300 cursor-pointer text-sm font-semibold hover:text-primary-200"
+          <div className="my-6 flex items-center gap-3">
+            <span className="h-px flex-1 bg-white/[0.08]" />
+            <span
+              className="text-[11px] font-medium uppercase tracking-[0.1em] text-[#5F736A]"
+              style={{ fontFamily: 'var(--font-mono)' }}
             >
-              {mode === 'login' ? 'Create one free' : 'Sign in'}
-            </button>
-          </p>
+              Or continue with
+            </span>
+            <span className="h-px flex-1 bg-white/[0.08]" />
+          </div>
 
-          <p className="text-center mt-5 text-xs text-gray-400 leading-relaxed">
-            By continuing you agree to our{' '}
-            <a href="/terms" className="text-gray-300 no-underline hover:text-white">Terms</a>
-            {' '}and{' '}
-            <a href="/privacy" className="text-gray-300 no-underline hover:text-white">Privacy Policy</a>
+          <div className="flex gap-3">
+            <button className="flex flex-1 items-center justify-center gap-2 rounded-full border border-white/[0.1] py-3 text-[13.5px] font-medium text-[#EAF2ED] transition-colors hover:border-white/25">
+              <FaChrome className="h-4 w-4" />
+              Google
+            </button>
+            <button className="flex flex-1 items-center justify-center gap-2 rounded-full border border-white/[0.1] py-3 text-[13.5px] font-medium text-[#EAF2ED] transition-colors hover:border-white/25">
+              <FaLinkedin className="h-4 w-4" />
+              LinkedIn
+            </button>
+          </div>
+
+          <p className="mt-8 text-center text-[13px] text-[#5F736A]">
+            Don’t have an account?{' '}
+            <a href="/register" className="font-medium text-[#8FB8A4] hover:underline">
+              Create one
+            </a>
           </p>
         </motion.div>
       </div>
-    </div>
-  )
+    </main>
+  );
 }

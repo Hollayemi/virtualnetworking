@@ -2,12 +2,12 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Nexus — AI-Powered Event Networking',
-  description: 'Connect with the right people at every conference, summit, and professional event. AI matchmaking that turns chance encounters into meaningful relationships.',
-  keywords: 'event networking, AI matchmaking, conference networking, professional networking, event app',
+  title: 'VirtualNet — Structured Networking for Events',
+  description: 'Skip the badge-scan small talk. Send structured connection requests, unlock verified VIPs, and earn cashback credits every time someone books time with you.',
+  keywords: 'event networking, structured networking, VIP access, event platform, Web3 events, conference networking',
   openGraph: {
-    title: 'Nexus — AI-Powered Event Networking',
-    description: 'Meet the right people before the event begins.',
+    title: 'VirtualNet — Structured Networking for Events',
+    description: 'Every connection here is worth something.',
     type: 'website',
   },
 }
