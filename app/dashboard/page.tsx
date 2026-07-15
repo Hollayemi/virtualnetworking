@@ -1,3 +1,4 @@
+// app/dashboard/page.tsx (Overview - updated to use hooks)
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
@@ -20,21 +21,17 @@ import {
   LucideIcon,
 } from 'lucide-react';
 import { useRole, ACCENT } from '@/lib/role-context';
-
-/**
- * app/dashboard/page.tsx
- *
- * This is the route both nav sets point "Overview" at. Rather than two
- * separate routes, it reads the shared role context and crossfades between
- * an Attendee view and an Organizer view — so switching roles in the
- * sidebar updates this page in place, exactly like the nav items do.
- */
+import { useGetCurrentEventQuery } from '@/redux/slices';
+import {
+  useGetConnectionsStatsQuery,
+  useGetPendingCountQuery,
+} from '@/redux/slices';
+import { useGetWalletBalanceQuery } from '@/redux/slices';
+import { useGetUpcomingMeetingsQuery } from '@/redux/slices';
 
 const display = Space_Grotesk({ subsets: ['latin'], weight: ['500', '600', '700'], variable: '--font-display' });
 const body = Inter({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--font-body' });
 const mono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-mono' });
-
-// --- Shared bits ---------------------------------------------------------------
 
 type Accent = (typeof ACCENT)[keyof typeof ACCENT];
 
@@ -96,7 +93,6 @@ function SectionCard({
   );
 }
 
-/** Small animated bar chart — no chart library, just SVG + Framer Motion. */
 function MiniBarChart({ data, color }: { data: number[]; color: string }) {
   const max = Math.max(...data, 1);
   return (
@@ -121,44 +117,53 @@ const fadeVariants = {
   exit: { opacity: 0, y: -10 },
 };
 
-// --- Attendee overview -----------------------------------------------------------
-
-const SUGGESTED = [
-  { name: 'Priya Menon', role: 'Investor · Fintech', shared: 'Shares your interest in Fundraising', initials: 'PM' },
-  { name: 'Diego Alvarez', role: 'Founder · DevTools', shared: 'Also tagged Partnership as a goal', initials: 'DA' },
-  { name: 'Kenji Sato', role: 'Recruiter · Web3', shared: 'Shares your interest in Hiring', initials: 'KS' },
-];
-
-const UPCOMING_MEETINGS = [
-  { name: 'Sana Malik', time: 'Today · 2:30 PM', topic: 'Seed round intro', initials: 'SM' },
-  { name: 'Leo Fontaine', time: 'Today · 4:00 PM', topic: 'Partnership scoping', initials: 'LF' },
-  { name: 'Ada Whitfield', time: 'Tomorrow · 10:00 AM', topic: 'Hiring pipeline chat', initials: 'AW' },
-];
-
-const LEDGER = [
-  { text: 'Request accepted by Kenji Sato (VIP)', delta: '-3 cr', kind: 'debit' as const },
-  { text: 'Cashback from Ada Whitfield', delta: '+1 cr', kind: 'credit' as const },
-  { text: 'Meeting booked with Sana Malik', delta: 'Confirmed', kind: 'credit' as const },
-];
+// ─── Attendee overview ──────────────────────────────────────────────────────────
 
 function AttendeeOverview() {
+  const { data: currentEvent } = useGetCurrentEventQuery();
+  const eventId = currentEvent?.data?._id;
+
+  const { data: statsData } = useGetConnectionsStatsQuery({ eventId });
+  const { data: pendingData } = useGetPendingCountQuery({ eventId });
+  const { data: balanceData } = useGetWalletBalanceQuery({ eventId });
+  const { data: meetingsData } = useGetUpcomingMeetingsQuery({ eventId, limit: 3 });
+
+  const stats = statsData?.data;
+  const pendingCount = pendingData?.data?.count || 0;
+  const balance = balanceData?.data?.balance || 0;
+  const meetings = meetingsData?.data || [];
+
   const accent = ACCENT.attendee;
+
+  // Mock data for suggested and ledger (would come from real APIs)
+  const SUGGESTED = [
+    { name: 'Priya Menon', role: 'Investor · Fintech', shared: 'Shares your interest in Fundraising', initials: 'PM' },
+    { name: 'Diego Alvarez', role: 'Founder · DevTools', shared: 'Also tagged Partnership as a goal', initials: 'DA' },
+    { name: 'Kenji Sato', role: 'Recruiter · Web3', shared: 'Shares your interest in Hiring', initials: 'KS' },
+  ];
+
+  const LEDGER = [
+    { text: 'Request accepted by Kenji Sato (VIP)', delta: '-3 cr', kind: 'debit' as const },
+    { text: 'Cashback from Ada Whitfield', delta: '+1 cr', kind: 'credit' as const },
+    { text: 'Meeting booked with Sana Malik', delta: 'Confirmed', kind: 'credit' as const },
+  ];
+
   return (
     <div className="flex flex-col gap-6">
       <div>
         <h2 className="text-[1.5rem] font-semibold tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-          Welcome back, Amara
+          Welcome back
         </h2>
         <p className="mt-1 text-[13.5px] text-[#92A79C]">
-          Fintech Summit 2026 is live — here's where your networking stands right now.
+          {currentEvent?.data?.name || 'Fintech Summit 2026'} is live — here's where your networking stands right now.
         </p>
       </div>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard icon={Share2} label="Connections sent" value="24" delta="+6 this week" accent={accent} />
-        <StatCard icon={Sparkles} label="Requests accepted" value="17" delta="+3 this week" accent={accent} />
-        <StatCard icon={CalendarClock} label="Meetings booked" value="5" accent={accent} />
-        <StatCard icon={Wallet} label="Credit balance" value="42 cr" accent={accent} />
+        <StatCard icon={Share2} label="Connections sent" value={String(stats?.sent || 0)} delta="+6 this week" accent={accent} />
+        <StatCard icon={Sparkles} label="Requests accepted" value={String(stats?.accepted || 0)} delta="+3 this week" accent={accent} />
+        <StatCard icon={CalendarClock} label="Meetings booked" value={String(meetings.length)} accent={accent} />
+        <StatCard icon={Wallet} label="Credit balance" value={`${balance} cr`} accent={accent} />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
@@ -200,32 +205,43 @@ function AttendeeOverview() {
             </span>
             <div>
               <p className="text-[1.4rem] font-semibold tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-                42 credits
+                {balance} credits
               </p>
-              <p className="text-[11.5px] text-[#7C8F85]">6 cr earned in cashback</p>
+              <p className="text-[11.5px] text-[#7C8F85]">{balanceData?.data?.earnedThisMonth || 0} cr earned in cashback</p>
             </div>
           </div>
-          <button className="mt-4 w-full rounded-full border border-white/10 py-2.5 text-[13px] font-medium text-[#EAF2ED] hover:border-white/25">
-            Buy more credits
-          </button>
+          <a href="/dashboard/wallet">
+            <button className="mt-4 w-full rounded-full border border-white/10 py-2.5 text-[13px] font-medium text-[#EAF2ED] hover:border-white/25">
+              Buy more credits
+            </button>
+          </a>
         </SectionCard>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <SectionCard title="Upcoming meetings">
           <div className="flex flex-col gap-3">
-            {UPCOMING_MEETINGS.map((m) => (
-              <div key={m.name + m.time} className="flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/[0.06] text-[11.5px] font-semibold">
-                  {m.initials}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-[13.5px] font-medium text-[#EAF2ED]">{m.name}</p>
-                  <p className="truncate text-[12px] text-[#7C8F85]">{m.topic}</p>
-                </div>
-                <span className="shrink-0 text-[11.5px] font-medium text-[#8FB8A4]">{m.time}</span>
-              </div>
-            ))}
+            {meetings.length === 0 ? (
+              <p className="py-4 text-center text-[#5F736A]">No upcoming meetings</p>
+            ) : (
+              meetings.map((m) => {
+                const person = m.organizer || m.participant;
+                return (
+                  <div key={m._id} className="flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
+                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/[0.06] text-[11.5px] font-semibold">
+                      {person?.initials || '??'}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-[13.5px] font-medium text-[#EAF2ED]">{person?.name || 'Unknown'}</p>
+                      <p className="truncate text-[12px] text-[#7C8F85]">{m.topic}</p>
+                    </div>
+                    <span className="shrink-0 text-[11.5px] font-medium text-[#8FB8A4]">
+                      {new Date(m.scheduledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
+                );
+              })
+            )}
           </div>
         </SectionCard>
 
@@ -251,25 +267,30 @@ function AttendeeOverview() {
   );
 }
 
-// --- Organizer overview ---------------------------------------------------------
+// ─── Organizer overview ─────────────────────────────────────────────────────────
 
 const REGISTRATIONS_TREND = [12, 18, 14, 22, 30, 26, 34, 40, 38, 44, 50, 47];
 
-const EVENTS = [
-  { name: 'Fintech Summit 2026', date: 'Jul 14 – 16', sold: '842 / 1,000', status: 'Live' },
-  { name: 'Founders Roundtable', date: 'Aug 2', sold: '120 / 150', status: 'Upcoming' },
-  { name: 'DevTools Meetup', date: 'Aug 20', sold: '58 / 200', status: 'Upcoming' },
-];
-
 function OrganizerOverview() {
+  const { data: currentEvent } = useGetCurrentEventQuery();
   const accent = ACCENT.organizer;
+
+  // Mock events data (would come from real API)
+  const EVENTS = [
+    { name: 'Fintech Summit 2026', date: 'Jul 14 – 16', sold: '842 / 1,000', status: 'Live' },
+    { name: 'Founders Roundtable', date: 'Aug 2', sold: '120 / 150', status: 'Upcoming' },
+    { name: 'DevTools Meetup', date: 'Aug 20', sold: '58 / 200', status: 'Upcoming' },
+  ];
+
   return (
     <div className="flex flex-col gap-6">
       <div>
         <h2 className="text-[1.5rem] font-semibold tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-          Welcome back, Amara
+          Welcome back
         </h2>
-        <p className="mt-1 text-[13.5px] text-[#92A79C]">Here's how Summit Collective's events are performing.</p>
+        <p className="mt-1 text-[13.5px] text-[#92A79C]">
+          Here's how {currentEvent?.data?.organiserId?.organisationName || 'Summit Collective'}'s events are performing.
+        </p>
       </div>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -282,7 +303,7 @@ function OrganizerOverview() {
       <div className="grid gap-4 lg:grid-cols-3">
         <SectionCard
           title="Registrations, last 12 days"
-          action={<span className="text-[11.5px] text-[#7C8F85]">Fintech Summit 2026</span>}
+          action={<span className="text-[11.5px] text-[#7C8F85]">{currentEvent?.data?.name || 'Fintech Summit 2026'}</span>}
           className="lg:col-span-2"
         >
           <MiniBarChart data={REGISTRATIONS_TREND} color={accent.bg} />
@@ -326,6 +347,7 @@ function OrganizerOverview() {
                   <p className="truncate text-[13.5px] font-medium text-[#EAF2ED]">{ev.name}</p>
                   <p className="truncate text-[12px] text-[#7C8F85]">
                     {ev.date} · {ev.sold} tickets
+                    // app/dashboard/page.tsx (continued)
                   </p>
                 </div>
                 <span
@@ -367,7 +389,7 @@ function OrganizerOverview() {
   );
 }
 
-// --- Page ------------------------------------------------------------------------
+// ─── Page ────────────────────────────────────────────────────────────────────────
 
 export default function DashboardOverviewPage() {
   const { role } = useRole();

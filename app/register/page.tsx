@@ -17,6 +17,7 @@ import {
   X,
   LucideIcon,
 } from 'lucide-react';
+import { useRegisterUserMutation } from '@/redux/authService/authSlice';
 
 const display = Space_Grotesk({ subsets: ['latin'], weight: ['500', '600', '700'], variable: '--font-display' });
 const body = Inter({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--font-body' });
@@ -260,11 +261,10 @@ function ChipSingleSelect({
               key={opt}
               type="button"
               onClick={() => onChange(selected ? '' : opt)}
-              className={`rounded-full border px-3.5 py-1.5 text-[12.5px] font-medium transition-colors ${
-                selected
+              className={`rounded-full border px-3.5 py-1.5 text-[12.5px] font-medium transition-colors ${selected
                   ? 'border-[#639781] bg-[#639781]/15 text-[#8FB8A4]'
                   : 'border-white/[0.1] text-[#92A79C] hover:border-[#639781]/30 hover:text-[#EAF2ED]'
-              }`}
+                }`}
             >
               {opt}
             </button>
@@ -312,11 +312,10 @@ function ChipMultiSelect({
               key={opt}
               type="button"
               onClick={() => toggle(opt)}
-              className={`flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[12.5px] font-medium transition-colors ${
-                selected
+              className={`flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[12.5px] font-medium transition-colors ${selected
                   ? 'border-[#639781] bg-[#639781]/15 text-[#8FB8A4]'
                   : 'border-white/[0.1] text-[#92A79C] hover:border-[#639781]/30 hover:text-[#EAF2ED]'
-              }`}
+                }`}
             >
               {selected && <Check className="h-3 w-3" />}
               {opt}
@@ -422,9 +421,8 @@ function RoleCard({
     <button
       type="button"
       onClick={onClick}
-      className={`relative flex flex-1 flex-col items-start gap-3 rounded-2xl border p-5 text-left transition-colors ${
-        selected ? 'border-[#639781]/60 bg-[#639781]/[0.08]' : 'border-white/[0.08] bg-[#101915] hover:border-white/[0.16]'
-      }`}
+      className={`relative flex flex-1 flex-col items-start gap-3 rounded-2xl border p-5 text-left transition-colors ${selected ? 'border-[#639781]/60 bg-[#639781]/[0.08]' : 'border-white/[0.08] bg-[#101915] hover:border-white/[0.16]'
+        }`}
     >
       {selected && (
         <span className="absolute right-4 top-4 grid h-5 w-5 place-items-center rounded-full bg-[#639781] text-[#0A100D]">
@@ -432,9 +430,8 @@ function RoleCard({
         </span>
       )}
       <span
-        className={`grid h-10 w-10 place-items-center rounded-xl ${
-          selected ? 'bg-[#639781]/20 text-[#8FB8A4]' : 'bg-white/[0.05] text-[#92A79C]'
-        }`}
+        className={`grid h-10 w-10 place-items-center rounded-xl ${selected ? 'bg-[#639781]/20 text-[#8FB8A4]' : 'bg-white/[0.05] text-[#92A79C]'
+          }`}
       >
         <Icon className="h-[18px] w-[18px]" />
       </span>
@@ -470,7 +467,9 @@ export default function RegisterPage() {
   const [accountType, setAccountType] = useState<AccountType | null>(null);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [submitting, setSubmitting] = useState(false);
+
+
+  const [register, { isLoading: submitting }] = useRegisterUserMutation()
 
   const update = (patch: Partial<FormState>) => setForm((f) => ({ ...f, ...patch }));
 
@@ -488,40 +487,25 @@ export default function RegisterPage() {
       return;
     }
     setErrors({});
-    setSubmitting(true);
 
-    if (accountType === 'attendee') {
-      const payload: RegisterUserInput = {
-        name: form.name,
-        email: form.email,
-        password: form.password,
-        phone: form.phone || undefined,
-        bio: form.bio || undefined,
-        role: form.role || undefined,
-        company: form.company || undefined,
-        industry: form.industry || undefined,
-        interests: form.interests.length ? form.interests : undefined,
-        networkingGoals: form.networkingGoals || undefined,
-      };
-      // TODO: replace with your real API call, e.g. await api.registerUser(payload)
-      await new Promise((r) => setTimeout(r, 900));
-      console.log('RegisterUserInput', payload);
-    } else {
-      const payload: RegisterOrganiserInput = {
-        name: form.name,
-        email: form.email,
-        password: form.password,
-        organisationName: form.organisationName,
-        organisationDescription: form.organisationDescription || undefined,
-        website: form.website || undefined,
-        phone: form.phone || undefined,
-      };
-      // TODO: replace with your real API call, e.g. await api.registerOrganiser(payload)
-      await new Promise((r) => setTimeout(r, 900));
-      console.log('RegisterOrganiserInput', payload);
-    }
-
-    setSubmitting(false);
+    const payload = {
+      name: form.name,
+      email: form.email,
+      password: form.password,
+      phone: form.phone || undefined,
+      accountType: accountType,
+      bio: form.bio || undefined,
+      role: form.role || undefined,
+      company: form.company || undefined,
+      industry: form.industry || undefined,
+      interests: form.interests.length ? form.interests : undefined,
+      networkingGoals: form.networkingGoals || undefined,
+      organisationName: form.organisationName,
+      organisationDescription: form.organisationDescription || undefined,
+      website: form.website || undefined,
+    };
+    await register(payload)
+    console.log('RegisterOrganiserInput', payload);
     setStep('success');
   };
 

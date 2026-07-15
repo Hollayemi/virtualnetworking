@@ -1,15 +1,3 @@
-/**
- * authEvents.ts
- *
- * A tiny event bus that lets the RTK Query base query signal "401 received"
- * to any listener (the auth provider, a toast, etc.) without creating
- * circular imports between the Redux store and React components.
- *
- * Usage:
- *   emitAuthExpired()          — called from axiosBaseQuery on 401
- *   onAuthExpired(callback)    — called from AuthGuard / root layout
- *   offAuthExpired(callback)   — cleanup in useEffect
- */
 
 type AuthExpiredCallback = (reason: "unauthorized" | "forbidden") => void;
 

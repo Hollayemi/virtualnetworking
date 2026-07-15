@@ -33,8 +33,12 @@ type RoleContextValue = {
 
 const RoleContext = createContext<RoleContextValue | null>(null);
 
-export function RoleProvider({ children }: { children: ReactNode }) {
-  const [role, setRole] = useState<Role>('attendee');
+export function RoleProvider({ children, currentPage }: { children: ReactNode, currentPage: string }) {
+  const attendees = ["discover", "meetings", "profile", "settings", "wallet", "connections"]
+  const organisers = ["analytics", "attendees", "events", "payments", "sponsor"]
+  const isAttendee = attendees.includes(currentPage)
+  const currentRole = isAttendee ? "attendee" : "organizer"
+  const [role, setRole] = useState<Role>(currentRole);
   return <RoleContext.Provider value={{ role, setRole, accent: ACCENT[role] }}>{children}</RoleContext.Provider>;
 }
 

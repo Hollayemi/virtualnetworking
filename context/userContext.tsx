@@ -1,7 +1,7 @@
 "use client";
 import { useGetUserProfileQuery } from "@/redux/authService/authSlice";
 import { isAuthenticated } from "@/redux/shared/axiosBaseQuery";
-import { ApiResponse, CitizenProfile, LawyerProfile, CitizenFull } from "@/redux/types";
+import { UserResponse } from "@/redux/types";
 import { useRef, useEffect, useState, createContext, useCallback } from "react";
 
 
@@ -34,7 +34,7 @@ const UserDataProvider = ({ children }: { children: React.ReactNode }) => {
             value={{
                 ...defaultProvider,
                 userInfo:
-                    (!userErr && !userIsLoading && (userInfo as any)?.data) || {} as CitizenFull,
+                    (!userErr && !userIsLoading && (userInfo as any)?.data) || {} as UserResponse,
                 loading,
                 setLoading,
               

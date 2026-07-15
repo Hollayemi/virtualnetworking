@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { emitAuthExpired } from "../shared/authEvents";
+import { showError, showSuccess } from '@/app/components/ui/sonner';
 import type {
   RegisterUserRequest,
   LoginRequest,
@@ -21,7 +22,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 
 function getToken(): string | null {
   if (typeof window === "undefined") return null;
-  return localStorage.getItem("vn_token");
+  return localStorage.getItem("token");
 }
 
 export const authApi = createApi({
@@ -33,7 +34,6 @@ export const authApi = createApi({
       if (token) headers.set("Authorization", `Bearer ${token}`);
       return headers;
     },
-    // Surface 401 / 403 to the event bus
     responseHandler: async (response) => {
       if (response.status === 401) emitAuthExpired("unauthorized");
       if (response.status === 403) emitAuthExpired("forbidden");
@@ -42,8 +42,6 @@ export const authApi = createApi({
   }),
   tagTypes: ["User", "Organiser"],
   endpoints: (builder) => ({
-    // ── Users ────────────────────────────────────────────────────────────────
-
     /** POST /users/register */
     registerUser: builder.mutation<AuthUserResponse, RegisterUserRequest>({
       query: (body) => ({ url: "/users/register", method: "POST", body }),
@@ -52,7 +50,24 @@ export const authApi = createApi({
 
     /** POST /users/login */
     loginUser: builder.mutation<AuthUserResponse, LoginRequest>({
-      query: (body) => ({ url: "/users/login", method: "POST", body }),
+      query: (body) => ({
+        url: "/users/login",
+        method: "POST",
+        body
+      }),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          localStorage.setItem('token', data.data.token);
+          if (data.success) {
+            showSuccess("Welcome Back!", data.message || "Welcome back!");
+          } else {
+            showError("Sign in failed", data.message || "An unexpected error occurred. Please try again.");
+          }
+        } catch (error) {
+
+        }
+      },
       invalidatesTags: ["User"],
     }),
 
@@ -80,19 +95,6 @@ export const authApi = createApi({
       invalidatesTags: ["User"],
     }),
 
-    // ── Organisers ────────────────────────────────────────────────────────────
-
-    /** POST /organisers/register */
-    registerOrganiser: builder.mutation<AuthOrganiserResponse, RegisterOrganiserRequest>({
-      query: (body) => ({ url: "/organisers/register", method: "POST", body }),
-      invalidatesTags: ["Organiser"],
-    }),
-
-    /** POST /organisers/login */
-    loginOrganiser: builder.mutation<AuthOrganiserResponse, LoginRequest>({
-      query: (body) => ({ url: "/organisers/login", method: "POST", body }),
-      invalidatesTags: ["Organiser"],
-    }),
 
     /** GET /organisers/me */
     getOrganiserProfile: builder.query<GetOrganiserProfileResponse, void>({
@@ -124,8 +126,6 @@ export const {
   useUpdateUserProfileMutation,
   useToggleVipProtectionMutation,
   useLogoutUserMutation,
-  useRegisterOrganiserMutation,
-  useLoginOrganiserMutation,
   useGetOrganiserProfileQuery,
   useUpdateOrganiserProfileMutation,
   useLogoutOrganiserMutation,

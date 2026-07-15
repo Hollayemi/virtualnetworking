@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import ProviderWrapper from '@/redux/provider'
+import { Toaster } from './components/ui/sonner'
+import { UserDataProvider } from '@/context/userContext'
 
 export const metadata: Metadata = {
   title: 'VirtualNet — Structured Networking for Events',
@@ -19,7 +22,36 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>{children}</body>
+      <ProviderWrapper>
+        <UserDataProvider>
+          {/* <Toaster
+            toastOptions={
+              {
+                position: "top-right",
+                error: {
+                  classNames: {
+                    toast: "border border-red-500 bg-red-50 text-red-700 font-medium",
+                    title: "text-red-700",
+                    description: "text-red-600",
+                    actionButton: "bg-red-100 text-red-800 hover:bg-red-200",
+                    cancelButton: "text-red-500",
+                  },
+                },
+                success: {
+                  classNames: {
+                    toast: "border border-green-500 bg-green-50 text-green-700 font-medium",
+                    title: "text-green-700",
+                    description: "text-green-600",
+                    actionButton: "bg-green-100 text-green-800 hover:bg-green-200",
+                    cancelButton: "text-green-500",
+                  },
+                },
+              } as any
+            }
+          /> */}
+          <body>{children}</body>
+        </UserDataProvider>
+      </ProviderWrapper>
     </html>
   )
 }

@@ -8,12 +8,14 @@ export function StatCard({
   value,
   delta,
   accent,
+  loading,
 }: {
   icon: LucideIcon;
   label: string;
   value: string;
   delta?: string;
   accent: Accent;
+  loading?: boolean
 }) {
   return (
     <div className="rounded-2xl border border-white/[0.07] bg-[#0D1712] p-5">

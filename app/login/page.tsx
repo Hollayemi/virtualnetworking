@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Space_Grotesk, Inter, IBM_Plex_Mono } from 'next/font/google';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Loader2, ShieldCheck, Sparkles } from 'lucide-react';
-import {  FaChrome, FaLinkedin } from 'react-icons/fa';
+import { FaChrome, FaLinkedin } from 'react-icons/fa';
 import { IMAGES } from '@/lib/images';
+import { useLoginUserMutation } from '@/redux/authService/authSlice';
 
 const display = Space_Grotesk({ subsets: ['latin'], weight: ['500', '600', '700'], variable: '--font-display' });
 const body = Inter({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--font-body' });
@@ -23,7 +25,9 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(true);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
-  const [submitting, setSubmitting] = useState(false);
+
+  const [loginHandler, { isLoading: submitting }] = useLoginUserMutation()
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,11 +37,10 @@ export default function LoginPage() {
     if (!password) next.password = 'Enter your password.';
     setErrors(next);
     if (Object.keys(next).length) return;
-
-    setSubmitting(true);
-    // TODO: replace with your real auth call, e.g. await api.login({ email, password, remember })
-    await new Promise((r) => setTimeout(r, 900));
-    setSubmitting(false);
+    const login = await loginHandler({ email, password });
+    if (login?.data?.success) {
+      router.push('/dashboard')
+    }
   };
 
   return (
@@ -186,9 +189,8 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => setRemember((v) => !v)}
-                className={`grid h-[18px] w-[18px] place-items-center rounded-md border transition-colors ${
-                  remember ? 'border-[#639781] bg-[#639781]' : 'border-white/20 bg-transparent'
-                }`}
+                className={`grid h-[18px] w-[18px] place-items-center rounded-md border transition-colors ${remember ? 'border-[#639781] bg-[#639781]' : 'border-white/20 bg-transparent'
+                  }`}
                 aria-pressed={remember}
               >
                 {remember && (

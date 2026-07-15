@@ -4,18 +4,32 @@ export interface User {
   _id: string;
   name: string;
   email: string;
-  phone?: string;
-  bio?: string;
-  role?: string;
-  company?: string;
-  industry?: string;
-  interests?: string[];
-  networkingGoals?: string;
-  vipProtection?: boolean;
-  isVerified?: boolean;
-  createdAt?: string;
-  updatedAt?: string;
+  phone: string;
+  bio: string;
+  accountType: string;
+  activeRole: string;
+  preferredLanguage: string;
+  timezone: string;
+  deletionScheduledFor: string | null;
+  roles: {
+    attendee: boolean;
+    organizer: boolean;
+  };
+  notifications: {
+    connectionRequests: boolean;
+    messages: boolean;
+    meetingReminders: boolean;
+    marketingEmails: boolean;
+    eventUpdates: boolean;
+    systemAlerts: boolean;
+  };
+  attendeeProfile?: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  id: string;
 }
+
 
 export interface Organiser {
   _id: string;
@@ -43,6 +57,9 @@ export interface RegisterUserRequest {
   industry?: string;
   interests?: string[];
   networkingGoals?: string;
+  organisationName?: string;
+  organisationDescription?: string;
+  website?: string;
 }
 
 export interface LoginRequest {

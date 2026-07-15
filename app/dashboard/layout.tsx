@@ -50,6 +50,8 @@ const body = Inter({ subsets: ['latin'], weight: ['400', '500', '600'], variable
 const mono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-mono' });
 
 import { Role, ACCENT, RoleProvider, useRole } from '@/lib/role-context';
+import { useUserData } from '@/hooks/useData';
+import { getInitials } from '@/utils';
 
 type NavItem = { icon: LucideIcon; label: string; href: string };
 
@@ -112,9 +114,8 @@ function RoleSwitch({ role, onChange, collapsed }: { role: Role; onChange: (r: R
           <button
             key={r}
             onClick={() => onChange(r)}
-            className={`relative z-10 flex items-center justify-center gap-1.5 rounded-lg py-2 text-[12.5px] font-semibold transition-colors ${
-              active ? 'text-[#0A100D]' : 'text-[#92A79C] hover:text-[#EAF2ED]'
-            }`}
+            className={`relative z-10 flex items-center justify-center gap-1.5 rounded-lg py-2 text-[12.5px] font-semibold transition-colors ${active ? 'text-[#0A100D]' : 'text-[#92A79C] hover:text-[#EAF2ED]'
+              }`}
           >
             {r === 'attendee' ? <UserCircle className="h-3.5 w-3.5" /> : <Megaphone className="h-3.5 w-3.5" />}
             {r === 'attendee' ? 'Attendee' : 'Organizer'}
@@ -124,8 +125,6 @@ function RoleSwitch({ role, onChange, collapsed }: { role: Role; onChange: (r: R
     </div>
   );
 }
-
-// --- Nav item ------------------------------------------------------------------
 
 function NavLink({
   item,
@@ -143,9 +142,8 @@ function NavLink({
     <a
       href={item.href}
       title={collapsed ? item.label : undefined}
-      className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] font-medium transition-colors ${
-        active ? '' : 'text-[#92A79C] hover:bg-white/[0.03] hover:text-[#EAF2ED]'
-      }`}
+      className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] font-medium transition-colors ${active ? '' : 'text-[#92A79C] hover:bg-white/[0.03] hover:text-[#EAF2ED]'
+        }`}
       style={active ? { backgroundColor: accent.soft, color: accent.text } : undefined}
     >
       <Icon className="h-[18px] w-[18px] shrink-0" />
@@ -174,6 +172,7 @@ function SidebarContent({
 }) {
   const accent = ACCENT[role];
   const navItems = role === 'attendee' ? ATTENDEE_NAV : ORGANIZER_NAV;
+
 
   return (
     <div className="flex h-full flex-col p-3">
@@ -253,6 +252,9 @@ function Topbar({
   const pageTitle = segments.length > 1 ? segments[segments.length - 1].replace(/-/g, ' ') : 'Overview';
   const accent = ACCENT[role];
 
+  const { userInfo } = useUserData()
+  const user = userInfo || {} as any
+
   return (
     <div className="flex h-16 items-center justify-between gap-4 rounded-2xl border border-white/[0.07] bg-[#101915] px-4 lg:px-5">
       <div className="flex items-center gap-3">
@@ -286,7 +288,7 @@ function Topbar({
           <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-[#D9756B]" />
         </button>
         <button className="flex items-center gap-2 rounded-lg border border-white/[0.08] py-1.5 pl-1.5 pr-2.5 text-[#EAF2ED]">
-          <span className="grid h-[26px] w-[26px] place-items-center rounded-full bg-white/[0.08] text-[11px] font-semibold">AO</span>
+          <span className="grid h-[26px] w-[26px] place-items-center rounded-full bg-white/[0.08] text-[11px] font-semibold">{getInitials(user.name)}</span>
           <ChevronDown className="h-3.5 w-3.5 text-[#5F736A]" />
         </button>
       </div>
@@ -297,10 +299,14 @@ function Topbar({
 // --- Layout ------------------------------------------------------------------------
 
 function DashboardShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const segments = pathname.split('/').filter(Boolean);
+  const currentPage = segments[1]
+
   const { role, setRole } = useRole();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const pathname = usePathname();
+
 
   return (
     <div
@@ -309,9 +315,8 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
     >
       {/* Desktop sidebar */}
       <aside
-        className={`relative hidden shrink-0 rounded-2xl border border-white/[0.07] bg-[#101915] transition-[width] duration-200 lg:block ${
-          collapsed ? 'w-[76px]' : 'w-[248px]'
-        }`}
+        className={`relative hidden shrink-0 rounded-2xl border border-white/[0.07] bg-[#101915] transition-[width] duration-200 lg:block ${collapsed ? 'w-[76px]' : 'w-[248px]'
+          }`}
       >
         <SidebarContent role={role} setRole={setRole} collapsed={collapsed} pathname={pathname} />
         <button
@@ -372,8 +377,12 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
 }
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const segments = pathname.split('/').filter(Boolean);
+  const currentPage = segments[1]
+
   return (
-    <RoleProvider>
+    <RoleProvider currentPage={currentPage}>
       <DashboardShell>{children}</DashboardShell>
     </RoleProvider>
   );
